@@ -6,4 +6,8 @@ don
 33
 44
 final
+<<<<<<< HEAD
 testing
+=======
+master
+>>>>>>> 88604e3 (master)
