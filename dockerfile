@@ -1,19 +1,19 @@
-FROM node:14
+FROM ubuntu:18.04
 
-# Setting working directory. All the path will be relative to WORKDIR
-WORKDIR /usr/src/app
+# Install dependencies
+RUN apt-get update && \
+ apt-get -y install apache2
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+# Install apache and write hello world message
+RUN echo 'Hello World! shanz' > /var/www/html/index.html
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+# Configure apache
+RUN echo '. /etc/apache2/envvars' > /root/run_apache.sh && \
+ echo 'mkdir -p /var/run/apache2' >> /root/run_apache.sh && \
+ echo 'mkdir -p /var/lock/apache2' >> /root/run_apache.sh && \ 
+ echo '/usr/sbin/apache2 -D FOREGROUND' >> /root/run_apache.sh && \ 
+ chmod 755 /root/run_apache.sh
 
-# Bundle app source
-COPY . .
+EXPOSE 80
 
-EXPOSE 3000
-CMD [ "node", "index.js" ]
+CMD /root/run_apache.sh
